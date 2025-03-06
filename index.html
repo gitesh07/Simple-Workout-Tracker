@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Workout Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        .task {
+            display: flex;
+            justify-content: space-between;
+            background: #4caf50;
+            color: white;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .completed {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <h1>Daily Workout Tracker</h1>
+    <div id="taskList"></div>
+    <script>
+        const today = new Date().toISOString().split('T')[0];
+        const storedData = JSON.parse(localStorage.getItem("workoutHistory")) || {};
+        
+        if (!storedData[today]) {
+            storedData[today] = { completed: false };
+            localStorage.setItem("workoutHistory", JSON.stringify(storedData));
+        }
+        
+        function renderTasks() {
+            const taskList = document.getElementById("taskList");
+            taskList.innerHTML = "";
+            
+            const taskDiv = document.createElement("div");
+            taskDiv.className = `task ${storedData[today].completed ? 'completed' : ''}`;
+            taskDiv.innerText = "Workout Completed";
+            taskDiv.onclick = function() {
+                storedData[today].completed = !storedData[today].completed;
+                localStorage.setItem("workoutHistory", JSON.stringify(storedData));
+                renderTasks();
+            };
+            
+            taskList.appendChild(taskDiv);
+        }
+        
+        renderTasks();
+    </script>
+</body>
+</html>
